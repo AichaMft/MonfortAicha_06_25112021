@@ -33,11 +33,9 @@ app.post('/api/auth/signup', (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
     next();
 });
-
-//Route post pour la connexion
-app.post('/api/auth/login', (req, res, next) => {
+/*app.post('/api/auth/login', (req, res, next) => {
     console.log(req.body);
-});
+});*/
 
-app.use('/api/auth', userRoutes)
+app.use('/api/auth', userRoutes);
 module.exports = app;

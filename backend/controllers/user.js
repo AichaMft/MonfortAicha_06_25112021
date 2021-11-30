@@ -1,24 +1,25 @@
-const user = require('../models/user');
 const bcrypt = require('bcrypt');
+const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
         .then(hash => {
-            const User = new user({
+            const user = new User({
                 email: req.body.email,
                 password: hash
             });
-            User.save()
+            user.save()
                 .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
                 .catch(error => res.status(400).json({ error }));
         })
         .catch(error => res.status(500).json({ error }));
+    next();
 };
 exports.login = (req, res, next) => {
-    user.findOne({ email: req.body.email })
-        .then(User => {
-            if (!User) {
+    User.findOne({ email: req.body.email })
+        .then(user => {
+            if (!user) {
                 return res.status(401).json({ error: 'Utilisateur inconnu !' });
             }
             bcrypt.compare(req.body.password, user.password)
@@ -27,9 +28,9 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ error: 'Mot de passe incorrect !' });
                     }
                     res.status(200).json({
-                        userId: User._id,
+                        userId: user._id,
                         token: jwt.sign(
-                            { userId: User._id},
+                            { userId: user._id},
                             'RANDOM_TOKEN_SECRET',
                             {expiresIn:'24H'}
                         )

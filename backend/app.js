@@ -1,12 +1,9 @@
 const express = require('express');
-
 const mongoose = require('mongoose');
+const path = require('path');
 
 const userRoutes = require('./routes/user');
-
 const saucesRoutes = require('./routes/sauces');
-
-const app = express();
 
 //Se connecte à la BDD
 mongoose.connect('mongodb+srv://aichou:mongomangue@cluster0.4vw3u.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
@@ -17,8 +14,7 @@ mongoose.connect('mongodb+srv://aichou:mongomangue@cluster0.4vw3u.mongodb.net/my
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-//Accès au corps de la page 
-app.use(express.json());
+const app = express();
 
 //Donne accès à tout type de requête
 app.use((req, res, next) => {
@@ -28,8 +24,12 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/auth', userRoutes);
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
-app.use('api/sauces', saucesRoutes);
+app.use(`/images`, express.static(path.join(__dirname, `images`)));
+
+app.use(`/api/sauces`, saucesRoutes);
+app.use(`/api/auth`, userRoutes);
 
 module.exports = app;

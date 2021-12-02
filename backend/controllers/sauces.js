@@ -8,7 +8,7 @@ exports.createSauce = (req, res, next) => {
         ...sauceObjet,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-    Sauce.save()
+    sauce.save()
         .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))
         .catch(error => res.status(400).json({ error }));
 };
@@ -48,6 +48,16 @@ exports.getOneSauce = (req, res, next) => {
 
 exports.getAllSauces = (req, res, next) => {
     Sauce.find()
-        .then(sauce => res.status(200).json(sauce))
+        .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
 };
+
+exports.likes = (req, res, next) => {
+    //condition
+    console.log(req.body)
+}
+//Si like = 1, l'utilisateur aime (= like) la sauce
+//Si like = 0, l'utilisateur annule son like ou son dislike. 
+//Si like = -1, l'utilisateur n'aime pas (=dislike) la sauce
+//L'ID de l'utilisateur doit être ajouté ou retiré du tableau approprié
+//un utilisateur ne peut avoir qu'une seule valeur pour chaque sauce

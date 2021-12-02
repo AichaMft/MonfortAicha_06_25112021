@@ -17,10 +17,13 @@ router.put('/:id', auth , multer, saucesCtrl.modifySauce );
 //Supprimer une sauce en vérifiant l'id
 router.delete('/:id', auth , saucesCtrl.deleteSauce );
 
+//Récuperer toutes les sauces
+router.get('/', auth , saucesCtrl.getAllSauces );
+
 //Récuperer une sauce en vérifiant l'id
 router.get('/:id', auth , saucesCtrl.getOneSauce );
 
-//Récuperer toutes les sauces
-router.get('/', auth , saucesCtrl.getAllSauces );
+//Route pour les likes
+router.post('/:id/like', auth, saucesCtrl.likes);
 
 module.exports = router;

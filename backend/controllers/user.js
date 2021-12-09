@@ -10,12 +10,14 @@ exports.signup = (req, res, next) => {
                 password: hash
             });
             user.save()
-        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        console.log('save new user')
+        .then(() => res.status(200).json({ message: "Utilisateur créé !" }))
         .catch((error) => res.status(400).json({ error }));
+        console.log('error 400');
     })
     .catch((error) => res.status(500).json({ error }));
 };
-console.log('ici entre signup et login');
+
 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })

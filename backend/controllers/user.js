@@ -10,12 +10,13 @@ exports.signup = (req, res, next) => {
                 password: hash
             });
             user.save()
-                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
-    next();
+        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
+console.log('ici entre signup et login');
+
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
@@ -32,7 +33,7 @@ exports.login = (req, res, next) => {
                         token: jwt.sign(
                             { userId: user._id},
                             'RANDOM_TOKEN_SECRET',
-                            {expiresIn:'24H'}
+                            {expiresIn:'24h'}
                         )
                     })
                 })
@@ -40,3 +41,4 @@ exports.login = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
 };
+console.log('ici après login');

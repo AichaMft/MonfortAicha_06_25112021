@@ -26,11 +26,10 @@ const imageUpload = multer({
     limits: {
       fileSize: 2000000 
     },
-    fileFilter(req, file, cb) {
+    fileFilter(req, file) {
       if (!file.originalname.match(/\.(png|jpg)$/)) { 
-         return cb(new Error('Pas de fichier image'));
+         return res.status(400).json({message: error });
        }
-     cb(undefined, true)
   }
 });
 

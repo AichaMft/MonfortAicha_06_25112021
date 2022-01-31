@@ -1,7 +1,7 @@
 const Sauce = require('../models/sauces');
 const fs = require('fs');
 
-exports.createSauce = (req, res, next) => {
+exports.createSauce = (req, res) => {
     const sauceObjet = JSON.parse(req.body.sauce);
     delete sauceObjet._id;
     const sauce = new Sauce({
@@ -14,9 +14,9 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save()
         .then(() => res.status(201).json({ message: 'Sauce enregistrée !' }))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(400).json({message: error }));
 };
-exports.modifySauce = (req, res, next) => {
+exports.modifySauce = (req, res) => {
     const sauceObjet = req.file ?
         {
             ...JSON.parse(req.body.sauce),
@@ -24,10 +24,10 @@ exports.modifySauce = (req, res, next) => {
         } : { ...req.body };
     Sauce.updateOne({ _id: req.params.id }, { ...sauceObjet, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-        .catch(error => res.status(404).json({ error }));
+        .catch(error => res.status(404).json({message: error }));
 };
 
-exports.deleteSauce = (req, res, next) => {
+exports.deleteSauce = (req, res) => {
     //Trouver l'objet à supprimer
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
@@ -37,26 +37,26 @@ exports.deleteSauce = (req, res, next) => {
             fs.unlink(`images/${filename}`, () => {
                 //Supprimer le fichier dans la bdd
                 Sauce.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Sauces suppriméé!' }))
-                    .catch(error => res.status(404).json({ error }));
+                    .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
+                    .catch(error => res.status(404).json({message: error }));
             });
         })
-        .catch(error => res.status(500).json({ error }));
+        .catch(error => res.status(500).json({message: error }));
 };
 
-exports.getOneSauce = (req, res, next) => {
+exports.getOneSauce = (req, res) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => res.status(200).json(sauce))
-        .catch(error => res.status(404).json({ error }));
+        .catch(error => res.status(404).json({message: error }));
 };
 
-exports.getAllSauces = (req, res, next) => {
+exports.getAllSauces = (req, res) => {
     Sauce.find()
         .then(sauces => res.status(200).json(sauces))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(400).json({message: error }));
 };
 
-exports.likes = (req, res, next) => {
+exports.likes = (req, res) => {
     //Si like = 1, l'utilisateur aime (= like) la sauce
     if (req.body.like === 1) {
         Sauce.updateOne(
@@ -65,7 +65,7 @@ exports.likes = (req, res, next) => {
             { _id: req.params.id }
         )
             .then(() => res.status(200).json({ message: "J'aime" }))
-            .catch((error) => res.status(400).json({ error }));
+            .catch((error) => res.status(400).json({message: error }));
         //si like est a -1, l'utilisateur n'aime pas (=dislike) la sauce
     } else if (req.body.like === -1) {
         Sauce.updateOne(
@@ -74,7 +74,7 @@ exports.likes = (req, res, next) => {
             { _id: req.params.id }
         )
             .then(() => res.status(200).json({ message: "Je n'aime pas" }))
-            .catch((error) => res.status(400).json({ error }));
+            .catch((error) => res.status(400).json({message: error }));
 
     } else {
         Sauce.findOne({ _id: req.params.id })
@@ -87,7 +87,7 @@ exports.likes = (req, res, next) => {
                         { _id: req.params.id }
                     )
                         .then(() => res.status(200).json({ message: "Je n'aime plus" }))
-                        .catch((error) => res.status(400).json({ error }));
+                        .catch((error) => res.status(400).json({message: error }));
                     //si l'userId est présent dans le tableau usersDisliked   
                 } else if (sauce.usersDisliked.includes(req.body.userId)) {
                     Sauce.updateOne(
@@ -96,11 +96,11 @@ exports.likes = (req, res, next) => {
                         { _id: req.params.id }
                     )
                         .then(() => res.status(200).json({ message: "J'aime encore" }))
-                        .catch((error) => res.status(400).json({ error }));
+                        .catch((error) => res.status(400).json({message: error }));
                 }
             }
             )
-            .catch((error) => res.status(400).json({ error }));
+            .catch((error) => res.status(400).json({message: error }));
     }
 }
 
